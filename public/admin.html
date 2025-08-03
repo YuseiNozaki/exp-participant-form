@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理画面 - 視覚探索実験予約システム</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>管理画面 - 視覚探索実験予約システム</h1>
+            <div class="admin-header">
+                <span>管理者: <strong id="admin-user">admin</strong></span>
+                <button id="logout-btn" class="btn btn-secondary">ログアウト</button>
+            </div>
+        </header>
+
+        <!-- Login Section -->
+        <section id="login-section" class="section">
+            <h2>管理者ログイン</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">ユーザー名</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">パスワード</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">ログイン</button>
+            </form>
+        </section>
+
+        <!-- Admin Dashboard -->
+        <div id="admin-dashboard" style="display: none;">
+            <!-- Statistics Section -->
+            <section class="section">
+                <h2>概要</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3 id="total-slots">0</h3>
+                        <p>総時間枠数</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="available-slots">0</h3>
+                        <p>公開中の枠</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="total-reservations">0</h3>
+                        <p>予約総数</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="total-participants">0</h3>
+                        <p>参加者総数</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slots Management Section -->
+            <section class="section">
+                <h2>時間枠管理</h2>
+                <div id="slots-loading" class="loading">データを読み込み中...</div>
+                <div id="slots-management"></div>
+            </section>
+
+            <!-- Reservations Management Section -->
+            <section class="section">
+                <h2>予約管理</h2>
+                <div id="reservations-loading" class="loading">データを読み込み中...</div>
+                <div id="reservations-management"></div>
+            </section>
+        </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>
