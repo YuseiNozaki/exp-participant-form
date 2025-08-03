@@ -24,7 +24,7 @@ class EmailService {
             throw new Exception('Slot not found');
         }
         
-        $subject = "【視覚探索実験】予約確認 - " . $this->formatDate($slot['date']) . " " . $this->formatTime($slot['start_time']);
+        $subject = "【研究参加】予約確認 - " . $this->formatDate($slot['date']) . " " . $this->formatTime($slot['start_time']);
         
         $message = $this->buildConfirmationMessage($name, $slot);
         $headers = $this->buildEmailHeaders();
@@ -71,7 +71,7 @@ class EmailService {
      * Send individual reminder email
      */
     private function sendReminderEmail($reservation) {
-        $subject = "【視覚探索実験】明日の実験のご案内 - " . $this->formatDate($reservation['date']) . " " . $this->formatTime($reservation['start_time']);
+        $subject = "【研究参加】明日の研究参加のご案内 - " . $this->formatDate($reservation['date']) . " " . $this->formatTime($reservation['start_time']);
         
         $message = $this->buildReminderMessage($reservation);
         $headers = $this->buildEmailHeaders();
@@ -95,40 +95,40 @@ class EmailService {
         return "
 {$name} 様
 
-視覚探索実験にご参加いただき、ありがとうございます。
+研究にご参加いただき、ありがとうございます。
 以下の内容で予約を確認いたしました。
 
 【予約詳細】
-実験日時: {$date} {$time}〜（約1時間）
+実験日時: {$date} {$time}〜（約30分）
 実験形式: オンライン（Zoomを使用予定）
 
 【実験前の準備】
-・静かな環境をご用意ください
-・安定したインターネット接続を確保してください
-・PCまたはタブレット（スマートフォンは推奨しません）
-・イヤホンまたはヘッドフォン（推奨）
+・30分間は研究に集中できる環境をご用意ください。
+・PCを使用しますのでご準備ください。（マウス推奨。トラックパッドでも可。）
 
 【重要事項】
-・実験開始の5分前にはZoomリンクにアクセスしてください
-・実験は約1時間を予定しています
-・途中での離脱は可能ですが、データが無効になる場合があります
+・開始の5分前にはZoomリンクにアクセスしてください。
+・途中での離脱は可能ですが、データが無効になる場合があります。
 
 【予約の変更・キャンセル】
-予約の変更・キャンセルは実験前日まで可能です。
-当日の変更は直接お電話でご連絡ください。
+・予約の変更・キャンセルは実施前日まで可能です。予約フォームから変更できます。
+・当日の変更・キャンセルは直接お電話かメールでご連絡ください。
 
 【Zoomリンク】
-実験前日に別途お送りいたします。
+https://us06web.zoom.us/j/9018517024?pwd=pGkkBhvadpfedA20hrlXKF3PHvBN8g.1
+
+ミーティングID: 901 851 7024
+パスコード: 4GMEGL
 
 【お問い合わせ】
 ご質問等がございましたら、以下までご連絡ください。
-メール: experiment@university.edu
-電話: 03-1234-5678（平日9:00-17:00）
+メール: r241004y@st.u-gakugei.ac.jp
+電話: 090-2236-0330
 
-実験前日にも再度ご案内メールをお送りします。
 ご参加をお待ちしております。
 
-視覚探索実験チーム
+東京学芸大学大学院 連合学校教育学研究科 博士課程
+野﨑優晴
         ";
     }
     
@@ -142,41 +142,33 @@ class EmailService {
         return "
 {$reservation['name']} 様
 
-いよいよ明日は視覚探索実験の日です。
-改めて実験詳細をご案内いたします。
+いよいよ明日は研究参加の日です。
+改めて詳細をご案内いたします。
 
-【実験詳細】
-実験日時: {$date} {$time}〜（約1時間）
+【予約詳細】
+実験日時: {$date} {$time}〜（約30分間）
 実験形式: オンライン（Zoom）
 
 【Zoomリンク】
-https://zoom.us/j/1234567890
-ミーティングID: 123 456 7890
-パスコード: experiment
+https://us06web.zoom.us/j/9018517024?pwd=pGkkBhvadpfedA20hrlXKF3PHvBN8g.1
+
+ミーティングID: 901 851 7024
+パスコード: 4GMEGL
 
 【重要な注意事項】
-✓ 実験開始の5分前にはZoomにアクセスしてください
-✓ 静かな環境でご参加ください
-✓ PCまたはタブレットを推奨します
-✓ イヤホン・ヘッドフォンを着用してください
-✓ 約1時間の時間を確保してください
-
-【準備チェックリスト】
-□ 安定したインターネット接続
-□ 静かな実験環境
-□ PC/タブレットの準備
-□ イヤホン/ヘッドフォンの準備
-□ 約1時間の時間確保
+✓ 実験開始の5分前にはZoomにアクセスしてください。
+✓ 静かな環境でご参加ください。
 
 【緊急連絡先】
-実験当日にトラブルが発生した場合は、以下までご連絡ください。
-電話: 03-1234-5678
-メール: experiment@university.edu
+実験当日のキャンセルや日程変更は、以下までご連絡ください。
+電話: 090-2236-0330
+メール: r241004y@st.u-gakugei.ac.jp
 
 お忙しい中お時間をいただき、ありがとうございます。
 明日お会いできることを楽しみにしております。
 
-視覚探索実験チーム
+東京学芸大学大学院 連合学校教育学研究科 博士課程
+野﨑優晴
         ";
     }
     
@@ -185,8 +177,8 @@ https://zoom.us/j/1234567890
      */
     private function buildEmailHeaders() {
         return implode("\r\n", [
-            "From: 視覚探索実験チーム <noreply@experiment.university.edu>",
-            "Reply-To: experiment@university.edu",
+            "From: 野﨑優晴 <r241004y@st.u-gakugei.ac.jp>",
+            "Reply-To: r241004y@st.u-gakugei.ac.jp",
             "Content-Type: text/plain; charset=UTF-8",
             "X-Mailer: PHP/" . phpversion()
         ]);
