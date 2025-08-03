@@ -7,6 +7,7 @@ header('Access-Control-Allow-Headers: Content-Type');
 require_once __DIR__ . '/../src/Slot.php';
 require_once __DIR__ . '/../src/Participant.php';
 require_once __DIR__ . '/../src/Reservation.php';
+require_once __DIR__ . '/../src/EmailService.php';
 
 /**
  * Simple API router for reservation system
@@ -15,11 +16,13 @@ class ApiRouter {
     private $slotModel;
     private $participantModel;
     private $reservationModel;
+    private $emailService;
     
     public function __construct() {
         $this->slotModel = new Slot();
         $this->participantModel = new Participant();
         $this->reservationModel = new Reservation();
+        $this->emailService = new EmailService();
     }
     
     public function handleRequest() {
@@ -118,8 +121,17 @@ class ApiRouter {
         $reservationId = $this->reservationModel->makeReservation($data['slot_id'], $participantId);
         
         if ($reservationId) {
-            // Send confirmation email (placeholder)
-            $this->sendConfirmationEmail($data['participant_email'], $data['participant_name'], $data['slot_id']);
+            // Send confirmation email
+            try {
+                $this->emailService->sendConfirmationEmail(
+                    $data['participant_email'], 
+                    $data['participant_name'], 
+                    $data['slot_id']
+                );
+            } catch (Exception $e) {
+                error_log("Failed to send confirmation email: " . $e->getMessage());
+            }
+            
             $this->sendJson(['success' => true, 'reservation_id' => $reservationId]);
         } else {
             $this->sendError('Failed to create reservation', 500);
@@ -134,31 +146,6 @@ class ApiRouter {
         
         $participantId = $this->participantModel->createOrGet($data['name'], $data['email']);
         $this->sendJson(['success' => true, 'participant_id' => $participantId]);
-    }
-    
-    private function sendConfirmationEmail($email, $name, $slotId) {
-        // Get slot details
-        $slot = $this->slotModel->findById($slotId);
-        if (!$slot) return;
-        
-        $subject = "Reservation Confirmation - Visual Search Experiment";
-        $message = "Dear {$name},\n\n";
-        $message .= "Your reservation has been confirmed for:\n";
-        $message .= "Date: {$slot['date']}\n";
-        $message .= "Time: {$slot['start_time']}\n\n";
-        $message .= "Please prepare the following:\n";
-        $message .= "- A quiet environment\n";
-        $message .= "- A computer with stable internet connection\n";
-        $message .= "- About 1 hour of your time\n\n";
-        $message .= "You will receive a reminder email the day before your session.\n\n";
-        $message .= "If you need to cancel or change your reservation, please do so at least 24 hours in advance.\n\n";
-        $message .= "Thank you for participating in our research!";
-        
-        $headers = "From: noreply@experiment.com\r\n";
-        $headers .= "Reply-To: support@experiment.com\r\n";
-        
-        // Note: In production, use a proper email service
-        mail($email, $subject, $message, $headers);
     }
     
     private function sendJson($data) {
