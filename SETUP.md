@@ -37,6 +37,19 @@ source database/init_slots.sql
 ```
 
 ### 3. データベース設定の変更
+以下のいずれかの方法でデータベース接続情報を設定：
+
+#### 方法A: 環境変数を使用（推奨）
+環境変数でデータベース接続情報を設定：
+
+```bash
+export DB_HOST='your-database-host'
+export DB_NAME='your-database-name'
+export DB_USER='your-username'
+export DB_PASSWORD='your-password'
+```
+
+#### 方法B: `config/database.php` を直接編集
 `config/database.php` を編集して、実際のデータベース情報を設定：
 
 ```php
@@ -45,6 +58,8 @@ private static $dbname = 'your-database-name';
 private static $username = 'your-username';
 private static $password = 'your-password';
 ```
+
+**注意**: 環境変数が設定されている場合は、環境変数の値が優先されます。
 
 ### 4. Webサーバーの設定
 
@@ -110,7 +125,10 @@ Elastic Beanstalk 環境で以下の環境変数を設定：
 DB_HOST=your-rds-endpoint
 DB_NAME=reservation_system
 DB_USER=your-db-username
-DB_PASS=your-db-password
+DB_PASSWORD=your-db-password
+```
+
+**注意**: `DB_PASS` も代替として利用可能です。
 ```
 
 ### 4. デプロイ設定ファイル
@@ -125,6 +143,8 @@ option_settings:
   aws:elasticbeanstalk:application:environment:
     DB_HOST: your-rds-endpoint
     DB_NAME: reservation_system
+    DB_USER: your-db-username
+    DB_PASSWORD: your-db-password
 ```
 
 ## セキュリティ設定
