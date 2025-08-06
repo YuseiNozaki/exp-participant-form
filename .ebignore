@@ -1,0 +1,10 @@
+.git/
+.gitignore
+.DS_Store
+Thumbs.db
+tests/
+*.md
+/vendor/
+/node_modules/
+.env
+.env.local
