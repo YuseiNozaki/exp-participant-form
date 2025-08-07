@@ -78,5 +78,5 @@
 - バックエンド：PHP
 - データベース：MySQL
 - メール送信：PHP mail等
-- デプロイ：AWS Elastic Beanstalk
+- デプロイ：Heroku (JawsDB mysql)
 
