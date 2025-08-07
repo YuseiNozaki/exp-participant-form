@@ -7,7 +7,7 @@
     </testsuites>
     <php>
         <env name="DB_HOST" value="localhost"/>
-        <env name="DB_NAME" value="reservation_system_test"/>
+        <env name="DB_NAME" value="uvg6yj0ckmhk1mrf_test"/>
         <env name="DB_USER" value="root"/>
         <env name="DB_PASS" value=""/>
     </php>

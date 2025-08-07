@@ -154,7 +154,7 @@ WHERE username = 'admin';
 ### バックアップ
 ```bash
 # データベースバックアップ
-mysqldump -u username -p reservation_system > backup_$(date +%Y%m%d).sql
+mysqldump -u username -p uvg6yj0ckmhk1mrf > backup_$(date +%Y%m%d).sql
 
 # ファイルバックアップ
 tar -czf system_backup_$(date +%Y%m%d).tar.gz /path/to/project/
@@ -163,7 +163,7 @@ tar -czf system_backup_$(date +%Y%m%d).tar.gz /path/to/project/
 ### リストア
 ```bash
 # データベースリストア
-mysql -u username -p reservation_system < backup_20250808.sql
+mysql -u username -p uvg6yj0ckmhk1mrf < backup_20250808.sql
 ```
 
 ## 緊急時対応

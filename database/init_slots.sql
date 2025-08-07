@@ -2,7 +2,7 @@
 -- Period: 2025-08-08 to 2025-08-31
 -- Time: 9:00 to 21:00 (12 slots per day, 1-hour intervals)
 
-USE reservation_system;
+USE uvg6yj0ckmhk1mrf;
 
 -- Generate slots for each day from 2025-08-08 to 2025-08-31
 INSERT INTO slots (date, start_time) VALUES

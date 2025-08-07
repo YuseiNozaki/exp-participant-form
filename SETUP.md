@@ -108,7 +108,7 @@ chmod 644 public/*.html
 Elastic Beanstalk 環境で以下の環境変数を設定：
 ```
 DB_HOST=your-rds-endpoint
-DB_NAME=reservation_system
+DB_NAME=uvg6yj0ckmhk1mrf
 DB_USER=your-db-username
 DB_PASS=your-db-password
 ```
@@ -124,7 +124,7 @@ option_settings:
     
   aws:elasticbeanstalk:application:environment:
     DB_HOST: your-rds-endpoint
-    DB_NAME: reservation_system
+    DB_NAME: uvg6yj0ckmhk1mrf
 ```
 
 ## セキュリティ設定
@@ -163,7 +163,7 @@ session.use_strict_mode = 1
 ```bash
 # テスト用データベースの準備
 mysql -u root -p
-CREATE DATABASE reservation_system_test;
+CREATE DATABASE uvg6yj0ckmhk1mrf_test;
 
 # テスト実行
 ./vendor/bin/phpunit
