@@ -1,8 +1,8 @@
 -- Database schema for the reservation system
 -- Based on system.md requirements
 
-CREATE DATABASE IF NOT EXISTS reservation_system CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE reservation_system;
+CREATE DATABASE IF NOT EXISTS uvg6yj0ckmhk1mrf CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE uvg6yj0ckmhk1mrf;
 
 -- Slots table: represents available time slots
 CREATE TABLE slots (

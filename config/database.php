@@ -6,7 +6,7 @@
 
 class DatabaseConfig {
     private static $host = 'localhost';
-    private static $dbname = 'reservation_system';
+    private static $dbname = 'uvg6yj0ckmhk1mrf';
     private static $username = 'root';
     private static $password = '';
     private static $charset = 'utf8mb4';

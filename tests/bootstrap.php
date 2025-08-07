@@ -23,7 +23,7 @@ require_once ROOT_PATH . '/src/Reservation.php';
 // Set test database configuration
 DatabaseConfig::setCredentials(
     $_ENV['DB_HOST'] ?? 'localhost',
-    $_ENV['DB_NAME'] ?? 'reservation_system_test',
+    $_ENV['DB_NAME'] ?? 'uvg6yj0ckmhk1mrf_test',
     $_ENV['DB_USER'] ?? 'root',
     $_ENV['DB_PASS'] ?? ''
 );
