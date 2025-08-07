@@ -2,6 +2,11 @@
 require_once __DIR__ . '/../src/Slot.php';
 require_once __DIR__ . '/../src/Participant.php';
 require_once __DIR__ . '/../src/Reservation.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 
 /**
  * Email service for handling reservation confirmations and reminders
@@ -10,9 +15,82 @@ class EmailService {
     private $reservationModel;
     private $slotModel;
     
-    public function __construct() {
-        $this->reservationModel = new Reservation();
-        $this->slotModel = new Slot();
+    public function __construct($reservationModel = null, $slotModel = null) {
+        $this->reservationModel = $reservationModel ?: new Reservation();
+        $this->slotModel = $slotModel ?: new Slot();
+    }
+    
+    /**
+     * Configure PHPMailer with SMTP settings
+     * Uses environment variables for Heroku compatibility
+     */
+    private function createMailer() {
+        $mail = new PHPMailer(true);
+        
+        try {
+            // Server settings
+            if (getenv('SMTP_HOST')) {
+                // Use SMTP for production (Heroku)
+                $mail->isSMTP();
+                $mail->Host       = getenv('SMTP_HOST');
+                $mail->SMTPAuth   = true;
+                $mail->Username   = getenv('SMTP_USERNAME');
+                $mail->Password   = getenv('SMTP_PASSWORD');
+                $mail->SMTPSecure = getenv('SMTP_SECURE') ?: PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Port       = getenv('SMTP_PORT') ?: 587;
+            } else {
+                // Use local mail for development
+                $mail->isMail();
+            }
+            
+            // Default sender
+            $mail->setFrom(
+                getenv('SMTP_FROM') ?: 'r241004y@st.u-gakugei.ac.jp',
+                '野﨑優晴'
+            );
+            $mail->addReplyTo(
+                getenv('SMTP_FROM') ?: 'r241004y@st.u-gakugei.ac.jp',
+                '野﨑優晴'
+            );
+            
+            // Content
+            $mail->isHTML(false);
+            $mail->CharSet = 'UTF-8';
+            
+        } catch (Exception $e) {
+            error_log("PHPMailer configuration error: " . $e->getMessage());
+            throw $e;
+        }
+        
+        return $mail;
+    }
+    
+    /**
+     * Configure SMTP settings for PHP mail() function
+     * Uses environment variables for Heroku compatibility
+     * @deprecated - replaced by createMailer() method
+     */
+    private function configureSMTP() {
+        // Check if we're in a production environment (Heroku)
+        if (getenv('SMTP_HOST') !== false) {
+            // Configure SMTP settings from environment variables
+            ini_set('SMTP', getenv('SMTP_HOST') ?: 'smtp.gmail.com');
+            ini_set('smtp_port', getenv('SMTP_PORT') ?: '587');
+            ini_set('sendmail_from', getenv('SMTP_FROM') ?: 'r241004y@st.u-gakugei.ac.jp');
+            
+            // For Windows systems or when sendmail_path is supported
+            if (getenv('SMTP_USERNAME') && getenv('SMTP_PASSWORD')) {
+                $sendmailPath = sprintf(
+                    '"%s" -t -i -f %s',
+                    getenv('SENDMAIL_PATH') ?: '/usr/sbin/sendmail',
+                    getenv('SMTP_FROM') ?: 'r241004y@st.u-gakugei.ac.jp'
+                );
+                ini_set('sendmail_path', $sendmailPath);
+            }
+        }
+        
+        // Log the configuration for debugging
+        error_log("SMTP configured - Host: " . ini_get('SMTP') . ", Port: " . ini_get('smtp_port'));
     }
     
     /**
@@ -24,18 +102,27 @@ class EmailService {
             throw new Exception('Slot not found');
         }
         
-        $subject = "【研究参加】予約確認 - " . $this->formatDate($slot['date']) . " " . $this->formatTime($slot['start_time']);
-        
-        $message = $this->buildConfirmationMessage($name, $slot);
-        $headers = $this->buildEmailHeaders();
-        
-        $result = mail($email, $subject, $message, $headers);
-        
-        if (!$result) {
-            error_log("Failed to send confirmation email to: $email");
+        try {
+            $mail = $this->createMailer();
+            
+            $mail->addAddress($email, $name);
+            $mail->Subject = "【研究参加】予約確認 - " . $this->formatDate($slot['date']) . " " . $this->formatTime($slot['start_time']);
+            $mail->Body = $this->buildConfirmationMessage($name, $slot);
+            
+            $result = $mail->send();
+            
+            if ($result) {
+                error_log("Confirmation email sent successfully to: $email");
+            } else {
+                error_log("Failed to send confirmation email to: $email");
+            }
+            
+            return $result;
+            
+        } catch (Exception $e) {
+            error_log("Failed to send confirmation email to: $email - " . $e->getMessage());
+            throw $e;
         }
-        
-        return $result;
     }
     
     /**
@@ -71,18 +158,24 @@ class EmailService {
      * Send individual reminder email
      */
     private function sendReminderEmail($reservation) {
-        $subject = "【研究参加】明日の研究参加のご案内 - " . $this->formatDate($reservation['date']) . " " . $this->formatTime($reservation['start_time']);
-        
-        $message = $this->buildReminderMessage($reservation);
-        $headers = $this->buildEmailHeaders();
-        
-        $result = mail($reservation['email'], $subject, $message, $headers);
-        
-        if (!$result) {
-            throw new Exception("Failed to send email");
+        try {
+            $mail = $this->createMailer();
+            
+            $mail->addAddress($reservation['email'], $reservation['name']);
+            $mail->Subject = "【研究参加】明日の研究参加のご案内 - " . $this->formatDate($reservation['date']) . " " . $this->formatTime($reservation['start_time']);
+            $mail->Body = $this->buildReminderMessage($reservation);
+            
+            $result = $mail->send();
+            
+            if (!$result) {
+                throw new Exception("Failed to send email");
+            }
+            
+            return $result;
+            
+        } catch (Exception $e) {
+            throw new Exception("Failed to send reminder email: " . $e->getMessage());
         }
-        
-        return $result;
     }
     
     /**

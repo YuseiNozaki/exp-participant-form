@@ -14,11 +14,13 @@ define('ROOT_PATH', dirname(__DIR__));
 define('TEST_ENV', true);
 
 // Include autoloader (if using Composer) or require needed files
+require_once ROOT_PATH . '/vendor/autoload.php';
 require_once ROOT_PATH . '/config/database.php';
 require_once ROOT_PATH . '/src/BaseModel.php';
 require_once ROOT_PATH . '/src/Slot.php';
 require_once ROOT_PATH . '/src/Participant.php';
 require_once ROOT_PATH . '/src/Reservation.php';
+require_once ROOT_PATH . '/src/EmailService.php';
 
 // Set test database configuration
 DatabaseConfig::setCredentials(
